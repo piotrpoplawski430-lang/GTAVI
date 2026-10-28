@@ -5,22 +5,24 @@ Write-Host "Downloading GTA VI:" -ForegroundColor Yellow
 $spinner = @('\', '|', '/', '-')
 
 for ($p = 0; $p -le 100; $p++) {
-    $spin = $spinner[$p % 4]
     $barLength = [math]::Floor($p / 5)
     $spaces = 20 - $barLength
     $bar = '=' * $barLength + ' ' * $spaces
     
-    Write-Host "`r[$spin] $p% [$bar]" -NoNewline -ForegroundColor Cyan
-    Start-Sleep -Seconds 3
+    for ($step = 0; $step -lt 30; $step++) {
+        $spin = $spinner[$step % 4]
+        Write-Host "`r[$spin] $p% [$bar]" -NoNewline -ForegroundColor Cyan
+        Start-Sleep -Milliseconds 100
+    }
 }
 
 Write-Host "`r[+] Downloading GTA VI Completed!                      " -ForegroundColor Green
 Start-Sleep -Seconds 1
 
 Write-Host "`nChecking Information About The System" -NoNewline
-for ($i = 0; $i -le 10; $i++) {
+for ($i = 0; $i -le 20; $i++) {
     Write-Host "`rChecking Information About The System $($spinner[$i % 4])" -NoNewline -ForegroundColor Yellow
-    Start-Sleep -Milliseconds 400
+    Start-Sleep -Milliseconds 100
 }
 Write-Host "`rChecking Information About The System - DONE          " -ForegroundColor Green
 Write-Host "`nInformation Checked:" -ForegroundColor Cyan

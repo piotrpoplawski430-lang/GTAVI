@@ -7,15 +7,21 @@ $spinner = @('\', '|', '/', '-')
 for ($p = 0; $p -le 100; $p++) {
     $barLength = [math]::Floor($p / 5)
     $spaces = 20 - $barLength
-    $bar = '=' * $barLength + ' ' * $spaces
+    $bar = ('█' * $barLength) + ('░' * $spaces)
     
-    $randomSeconds = Get-Random -Minimum 1 -Maximum 6
-    $totalSteps = $randomSeconds * 10
+    $delaySeconds = (Get-Random -Minimum 200 -Maximum 2200) / 1000
+    if ((Get-Random -Minimum 1 -Maximum 100) -le 65) {
+        $delaySeconds = (Get-Random -Minimum 200 -Maximum 900) / 1000
+    }
     
-    for ($step = 0; $step -lt $totalSteps; $step++) {
+    $steps = [math]::Max(2, [math]::Floor($delaySeconds / 0.05))
+    $stepDelay = $delaySeconds / $steps
+
+    for ($step = 0; $step -lt $steps; $step++) {
         $spin = $spinner[$step % 4]
-        Write-Host "`r[$spin] $p% [$bar]" -NoNewline -ForegroundColor Cyan
-        Start-Sleep -Milliseconds 100
+        Write-Host "`r[$spin] $p% " -NoNewline -ForegroundColor Cyan
+        Write-Host "[$bar]" -NoNewline -ForegroundColor Blue
+        Start-Sleep -Seconds $stepDelay
     }
 }
 
@@ -77,8 +83,9 @@ $targetCrashPercent = Get-Random -Minimum 21 -Maximum 58
 for ($p = 0; $p -le 100; $p++) {
     $barLength = [math]::Floor($p / 5)
     $spaces = 20 - $barLength
-    $bar = '=' * $barLength + ' ' * $spaces
-    Write-Host "`rProgress: $p% [$bar]" -NoNewline
+    $bar = ('█' * $barLength) + ('░' * $spaces)
+    Write-Host "`rProgress: $p% " -NoNewline -ForegroundColor Yellow
+    Write-Host "[$bar]" -NoNewline -ForegroundColor Blue
     
     if ($p -eq $targetCrashPercent) {
         Start-Sleep -Milliseconds 800

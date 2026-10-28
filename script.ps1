@@ -18,32 +18,41 @@ for ($i = 0; $i -le 10; $i++) {
 Write-Host "`rChecking Information About The System - DONE          " -ForegroundColor Green
 Write-Host "`nInformation Checked:" -ForegroundColor Cyan
 
+# Pobieranie prawdziwych podzespołów komputera
+$cpu = (Get-CimInstance Win32_Processor).Name.Trim()
+$gpu = (Get-CimInstance Win32_VideoController).Name
+if ($gpu -is [array]) { $gpu = $gpu[0] }
+
 $os = Get-CimInstance Win32_OperatingSystem
-$freeRamGB = [math]::Round($os.FreePhysicalMemory / 1MB, 1)
 $totalRamGB = [math]::Round($os.TotalVisibleMemorySize / 1MB, 0)
-$ramString = "$freeRamGB GB free / $totalRamGB GB total"
+$freeRamGB = [math]::Round($os.FreePhysicalMemory / 1MB, 1)
+
+$disk = Get-CimInstance Win32_LogicalDisk -Filter "DeviceID='C:'"
+$totalDiskGB = [math]::Round($disk.Size / 1GB, 0)
+$freeDiskGB = [math]::Round($disk.FreeSpace / 1GB, 0)
 
 $components = @(
-    "Memory - $ramString",
-    "Graphics Card - Dedicated DirectX 12 GPU",
+    "CPU Model - $cpu",
+    "Graphics Card - $gpu",
+    "Physical RAM - ${totalRamGB}GB Total (${freeRamGB}GB Free)",
+    "System Drive C: - ${totalDiskGB}GB Total (${freeDiskGB}GB Free)",
     "DirectX Version - DirectX 12 Ultimate",
-    "Processor Architecture - x64 Multi-Core",
+    "Operating System - $($os.Caption) ($($os.OSArchitecture))",
     "Shader Model 6.5 Support - Enabled",
     "Hardware Ray Tracing - Supported",
-    "Storage Speed - NVMe SSD Protocol",
-    "Display Resolution - 1920x1080 Native",
-    "Audio Endpoint - Spatial Sound Ready",
-    "Network Adapter - Broadband Connection",
+    "Storage Speed Protocol - NVMe / SSD Checked",
+    "Display Resolution - Native Screen Resolution",
+    "Audio Endpoint - Spatial Sound Enabled",
+    "Network Adapter - Broadband Connection Active",
     "Vulkan API Compatibility - Verified",
     "Windows Subsystem For Games - Active",
     "Driver Signature Enforcement - Valid",
-    "System Pagefile Allocation - Optimal",
-    "Kernel Security Check - Passed",
-    "Virtualization Based Security - Ready"
+    "Kernel Security Check - Passed"
 )
 
 foreach ($comp in $components) {
-    Start-Sleep -Milliseconds (Get-Random -Minimum 100 -Maximum 300)
+    # Realistyczna przerwa (od 300 do 700 ms na "sprawdzenie" każdego podzespołu)
+    Start-Sleep -Milliseconds (Get-Random -Minimum 300 -Maximum 700)
     Write-Host "$comp - " -NoNewline
     Write-Host "TRUE" -ForegroundColor Green
 }

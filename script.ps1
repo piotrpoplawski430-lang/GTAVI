@@ -1,24 +1,30 @@
 Clear-Host
 Write-Host "GTA VI:" -ForegroundColor Cyan
-Write-Host "Downloading " -NoNewline
+Write-Host "Downloading GTA VI:" -ForegroundColor Yellow
 
 $spinner = @('\', '|', '/', '-')
-for ($i = 0; $i -le 15; $i++) {
-    Write-Host "`rDownloading $($spinner[$i % 4])" -NoNewline -ForegroundColor Yellow
-    Start-Sleep -Milliseconds 150
+
+for ($p = 0; $p -le 100; $p++) {
+    $spin = $spinner[$p % 4]
+    $barLength = [math]::Floor($p / 5)
+    $spaces = 20 - $barLength
+    $bar = '=' * $barLength + ' ' * $spaces
+    
+    Write-Host "`r[$spin] $p% [$bar]" -NoNewline -ForegroundColor Cyan
+    Start-Sleep -Seconds 3
 }
-Write-Host "`rDownloading [====================] 100% Completed!" -ForegroundColor Green
+
+Write-Host "`r[+] Downloading GTA VI Completed!                      " -ForegroundColor Green
 Start-Sleep -Seconds 1
 
 Write-Host "`nChecking Information About The System" -NoNewline
 for ($i = 0; $i -le 10; $i++) {
     Write-Host "`rChecking Information About The System $($spinner[$i % 4])" -NoNewline -ForegroundColor Yellow
-    Start-Sleep -Milliseconds 150
+    Start-Sleep -Milliseconds 400
 }
 Write-Host "`rChecking Information About The System - DONE          " -ForegroundColor Green
 Write-Host "`nInformation Checked:" -ForegroundColor Cyan
 
-# Pobieranie prawdziwych podzespołów komputera
 $cpu = (Get-CimInstance Win32_Processor).Name.Trim()
 $gpu = (Get-CimInstance Win32_VideoController).Name
 if ($gpu -is [array]) { $gpu = $gpu[0] }
@@ -51,8 +57,7 @@ $components = @(
 )
 
 foreach ($comp in $components) {
-    # Realistyczna przerwa (od 300 do 700 ms na "sprawdzenie" każdego podzespołu)
-    Start-Sleep -Milliseconds (Get-Random -Minimum 300 -Maximum 700)
+    Start-Sleep -Milliseconds (Get-Random -Minimum 800 -Maximum 1500)
     Write-Host "$comp - " -NoNewline
     Write-Host "TRUE" -ForegroundColor Green
 }
@@ -65,14 +70,17 @@ Write-Host "`nInstalling GTA VI:" -ForegroundColor Yellow
 $targetCrashPercent = Get-Random -Minimum 21 -Maximum 58
 
 for ($p = 0; $p -le 100; $p++) {
-    Write-Host "`rProgress: $p% [$( '=' * [math]::Floor($p/5) )$(' ' * (20 - [math]::Floor($p/5)))]" -NoNewline
+    $barLength = [math]::Floor($p / 5)
+    $spaces = 20 - $barLength
+    $bar = '=' * $barLength + ' ' * $spaces
+    Write-Host "`rProgress: $p% [$bar]" -NoNewline
     
     if ($p -eq $targetCrashPercent) {
         Start-Sleep -Milliseconds 800
         break
     }
     
-    Start-Sleep -Milliseconds (Get-Random -Minimum 40 -Maximum 150)
+    Start-Sleep -Milliseconds (Get-Random -Minimum 80 -Maximum 200)
 }
 
 Add-Type -AssemblyName PresentationFramework,PresentationCore,WindowsBase

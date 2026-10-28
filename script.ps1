@@ -9,7 +9,10 @@ for ($p = 0; $p -le 100; $p++) {
     $spaces = 20 - $barLength
     $bar = '=' * $barLength + ' ' * $spaces
     
-    for ($step = 0; $step -lt 30; $step++) {
+    $randomSeconds = Get-Random -Minimum 1 -Maximum 6
+    $totalSteps = $randomSeconds * 10
+    
+    for ($step = 0; $step -lt $totalSteps; $step++) {
         $spin = $spinner[$step % 4]
         Write-Host "`r[$spin] $p% [$bar]" -NoNewline -ForegroundColor Cyan
         Start-Sleep -Milliseconds 100

@@ -1,3 +1,71 @@
+Clear-Host
+Write-Host "GTA VI:" -ForegroundColor Cyan
+Write-Host "Downloading " -NoNewline
+
+$spinner = @('\', '|', '/', '-')
+for ($i = 0; $i -le 15; $i++) {
+    Write-Host "`rDownloading $($spinner[$i % 4])" -NoNewline -ForegroundColor Yellow
+    Start-Sleep -Milliseconds 150
+}
+Write-Host "`rDownloading [====================] 100% Completed!" -ForegroundColor Green
+Start-Sleep -Seconds 1
+
+Write-Host "`nChecking Information About The System" -NoNewline
+for ($i = 0; $i -le 10; $i++) {
+    Write-Host "`rChecking Information About The System $($spinner[$i % 4])" -NoNewline -ForegroundColor Yellow
+    Start-Sleep -Milliseconds 150
+}
+Write-Host "`rChecking Information About The System - DONE          " -ForegroundColor Green
+Write-Host "`nInformation Checked:" -ForegroundColor Cyan
+
+$os = Get-CimInstance Win32_OperatingSystem
+$freeRamGB = [math]::Round($os.FreePhysicalMemory / 1MB, 1)
+$totalRamGB = [math]::Round($os.TotalVisibleMemorySize / 1MB, 0)
+$ramString = "$freeRamGB GB free / $totalRamGB GB total"
+
+$components = @(
+    "Memory - $ramString",
+    "Graphics Card - Dedicated DirectX 12 GPU",
+    "DirectX Version - DirectX 12 Ultimate",
+    "Processor Architecture - x64 Multi-Core",
+    "Shader Model 6.5 Support - Enabled",
+    "Hardware Ray Tracing - Supported",
+    "Storage Speed - NVMe SSD Protocol",
+    "Display Resolution - 1920x1080 Native",
+    "Audio Endpoint - Spatial Sound Ready",
+    "Network Adapter - Broadband Connection",
+    "Vulkan API Compatibility - Verified",
+    "Windows Subsystem For Games - Active",
+    "Driver Signature Enforcement - Valid",
+    "System Pagefile Allocation - Optimal",
+    "Kernel Security Check - Passed",
+    "Virtualization Based Security - Ready"
+)
+
+foreach ($comp in $components) {
+    Start-Sleep -Milliseconds (Get-Random -Minimum 100 -Maximum 300)
+    Write-Host "$comp - " -NoNewline
+    Write-Host "TRUE" -ForegroundColor Green
+}
+
+Write-Host "`nYour computer is ready for installing GTA VI" -ForegroundColor Cyan
+Start-Sleep -Seconds 2
+
+Write-Host "`nInstalling GTA VI:" -ForegroundColor Yellow
+
+$targetCrashPercent = Get-Random -Minimum 21 -Maximum 58
+
+for ($p = 0; $p -le 100; $p++) {
+    Write-Host "`rProgress: $p% [$( '=' * [math]::Floor($p/5) )$(' ' * (20 - [math]::Floor($p/5)))]" -NoNewline
+    
+    if ($p -eq $targetCrashPercent) {
+        Start-Sleep -Milliseconds 800
+        break
+    }
+    
+    Start-Sleep -Milliseconds (Get-Random -Minimum 40 -Maximum 150)
+}
+
 Add-Type -AssemblyName PresentationFramework,PresentationCore,WindowsBase
 
 $bsodMain = @"
@@ -44,7 +112,7 @@ $mainText.Width = 1400
 $stack.Children.Add($mainText)
 
 $percentText = New-Object System.Windows.Controls.TextBlock
-$percentText.Text = "0% ukończono"
+$percentText.Text = "$targetCrashPercent% ukończono"
 $percentText.FontFamily = 'Segoe UI'
 $percentText.FontSize = 28
 $percentText.Foreground = [System.Windows.Media.Brushes]::White
@@ -80,7 +148,7 @@ $soundJob = Start-Job -ScriptBlock {
     }
 }
 
-for ($i = 0; $i -le 100; $i++) {
+for ($i = $targetCrashPercent; $i -le 100; $i++) {
     $percentText.Text = "$i% ukończono"
     $window.Dispatcher.Invoke([Action]{} ,[System.Windows.Threading.DispatcherPriority]::Background)
 
